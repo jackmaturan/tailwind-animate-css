@@ -47,23 +47,25 @@ function createLogglyLogger(options = {}) {
     .map((tag) => tag.trim())
     .filter(Boolean);
 
-  const logger = winston.createLogger({
-    level: "info",
-    format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
-    defaultMeta: { service: "tailwind-animate-css" },
-    transports: [new winston.transports.Console({ format: winston.format.simple() })],
-  });
-
-  logger.add(
+  const transports = [
     new Loggly({
       token: logglyConfig.token,
       subdomain: logglyConfig.subdomain,
       tags,
       json: true,
     }),
-  );
+  ];
 
-  return logger;
+  if (process.env.TAILWIND_ANIMATE_CSS_LOG_CONSOLE === "1") {
+    transports.push(new winston.transports.Console({ format: winston.format.simple() }));
+  }
+
+  return winston.createLogger({
+    level: "info",
+    format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+    defaultMeta: { service: "tailwind-animate-css" },
+    transports,
+  });
 }
 
 module.exports = { collectOsInfo, createLogglyLogger };
