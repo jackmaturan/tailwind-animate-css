@@ -44,6 +44,9 @@ jobs:
           node-version: latest
           cache: pnpm
           registry-url: https://registry.npmjs.org
+          scope: "@jackmaturan"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -70,9 +73,7 @@ jobs:
           fi
 
       - name: Publish to npm
-        run: pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm publish --provenance --access public
 
       - name: Job summary
         run: |

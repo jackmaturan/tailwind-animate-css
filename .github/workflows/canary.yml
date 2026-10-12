@@ -1,9 +1,15 @@
+# Optional canary publishes on each push to main (tag: canary).
+# Requires repository secret NPM_TOKEN (npm granular token with Publish).
+#
+# Disable: remove NPM_TOKEN secret, or change `on:` to workflow_dispatch only.
+
 name: Publish canary to npm with pnpm
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -15,6 +21,7 @@ permissions:
 jobs:
   release:
     name: Release Canary
+    if: ${{ secrets.NPM_TOKEN != '' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +39,9 @@ jobs:
           node-version: latest
           cache: pnpm
           registry-url: https://registry.npmjs.org
+          scope: "@jackmaturan"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -41,38 +51,43 @@ jobs:
 
       - name: Publish canary to npm
         run: |
-          # --- Check if package exists in npm registry ---
-          package_name=$(pnpx json -f package.json -a name)
-          npm view "${package_name}" 2>/dev/null || {
-            echo "$package_name does not exist in the npm registry. Skipping publish."
+          set -euo pipefail
+          package_name=$(node -p "require('./package.json').name")
+          npm view "${package_name}" >/dev/null 2>&1 || {
+            echo "$package_name is not on npm yet. Skipping canary publish."
             exit 0
           }
-          # --- Determine and release the next canary version ---
-          current_latest=$(pnpx json -f package.json -a version)
+          current_latest=$(node -p "require('./package.json').version")
           IFS='.' read -r major minor patch <<<"$current_latest"
           upcoming_minor="$major.$((minor + 1)).0"
-          current_canary=$(npm view "${package_name}" dist-tags.canary 2>/dev/null)
+          current_canary=$(npm view "${package_name}" dist-tags.canary 2>/dev/null || true)
           if [ -z "$current_canary" ]; then
             release_version="$upcoming_minor-canary.0"
           else
-            IFS='.-' read -r canary_major canary_minor canary_patch canary_tag canary_version <<<"$current_canary"
+            IFS='.-' read -r canary_major canary_minor canary_patch _ canary_version <<<"$current_canary"
             release_version="$canary_major.$canary_minor.$canary_patch-canary.$((canary_version + 1))"
           fi
-          pnpx json -I -f package.json -e "this.version=\"$release_version\""
-          pnpm publish --provenance --access public --no-git-checks --tag canary
-          # --- Set the status with the release link ---
-          package_url="https://www.npmjs.com/package/$package_name/v/$release_version"
-          curl -L \
+          node -e "const fs=require('fs'); const p=require('./package.json'); p.version='$release_version'; fs.writeFileSync('package.json', JSON.stringify(p,null,2)+'\n')"
+          pnpm publish --provenance --access public --tag canary
+          package_url="https://www.npmjs.com/package/$(node -p "encodeURIComponent(require('./package.json').name)"))/v/$release_version"
+          curl -fsSL \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
-            -d "{\"body\": \"Package released - [\`$package_name@$release_version\`]($package_url)\"}"
-          curl -L \
+            -d "{\"body\": \"Canary published - [\`$package_name@$release_version\`]($package_url)\"}"
+          curl -fsSL \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
-            -d "{\"state\": \"success\", \"context\": \"Package released\", \"description\": \"$package_name@$release_version\", \"target_url\": \"$package_url\"}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            -d "{\"state\": \"success\", \"context\": \"Canary published\", \"description\": \"$package_name@$release_version\", \"target_url\": \"$package_url\"}"
+
+  missing-token:
+    name: Canary skipped (no NPM_TOKEN)
+    if: ${{ secrets.NPM_TOKEN == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain skip
+        run: |
+          echo "::warning::NPM_TOKEN is not set. Add an npm publish token under Settings → Secrets → Actions to enable canary publishes."
