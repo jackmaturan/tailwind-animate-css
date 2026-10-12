@@ -81,7 +81,7 @@ jobs:
           fi
 
       - name: Publish to npm
-        run: pnpm publish --provenance --access public --no-git-checks
+        run: pnpm publish --access public --no-git-checks
 
       - name: Job summary
         run: |
