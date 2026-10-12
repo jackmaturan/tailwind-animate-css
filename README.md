@@ -14,6 +14,12 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
 > [!NOTE]
 > **npm:** The unscoped name `tailwind-animate-css` is blocked (too similar to [`tailwind-animatecss`](https://www.npmjs.com/package/tailwind-animatecss)). Install **`@jackmaturan/tailwind-animate-css`** instead. The upstream package [`tw-animate-css`](https://www.npmjs.com/package/tw-animate-css) remains the original npm name from Wombosvideo.
 
+## Support
+
+This scoped package is maintained by [@jackmaturan](https://github.com/jackmaturan). If it helps your project, consider [sponsoring on GitHub](https://github.com/sponsors/jackmaturan).
+
+The animations are based on the excellent work of [Luca Bosin (@Wombosvideo)](https://github.com/Wombosvideo) and [`tw-animate-css`](https://github.com/Wombosvideo/tw-animate-css). You can [support the original author](https://github.com/sponsors/Wombosvideo) as well.
+
 ## Table of Contents
 
 - [Demo](#demo)
@@ -27,6 +33,7 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
     - [Transform Classes](#transform-classes)
   - [Ready-to-Use Animations](#ready-to-use-animations)
 - [Examples](#examples)
+- [Support](#support)
 - [Notes on Compatibility](#notes-on-compatibility)
 
 ## Demo

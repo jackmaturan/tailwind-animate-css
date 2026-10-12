@@ -31,11 +31,20 @@
   "homepage": "https://github.com/jackmaturan/tailwind-animate-css#readme",
   "bugs": "https://github.com/jackmaturan/tailwind-animate-css/issues",
   "repository": "github:jackmaturan/tailwind-animate-css",
-  "funding": "https://github.com/sponsors/Wombosvideo",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/jackmaturan"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/Wombosvideo"
+    }
+  ],
   "license": "MIT",
   "author": {
-    "name": "Luca Bosin",
-    "url": "https://github.com/Wombosvideo"
+    "name": "Jack Maturan",
+    "url": "https://github.com/jackmaturan"
   },
   "type": "module",
   "exports": {
