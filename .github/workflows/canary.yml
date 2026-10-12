@@ -68,7 +68,8 @@ jobs:
             release_version="$canary_major.$canary_minor.$canary_patch-canary.$((canary_version + 1))"
           fi
           node -e "const fs=require('fs'); const p=require('./package.json'); p.version='$release_version'; fs.writeFileSync('package.json', JSON.stringify(p,null,2)+'\n')"
-          pnpm publish --provenance --access public --tag canary
+          # Version is bumped only for this publish; do not commit canary versions to main.
+          pnpm publish --provenance --access public --tag canary --no-git-checks
           package_url="https://www.npmjs.com/package/$(node -p "encodeURIComponent(require('./package.json').name)"))/v/$release_version"
           curl -fsSL \
             -X POST \
