@@ -1,0 +1,89 @@
+# Stages a version on npm (no 2FA in CI). You approve it on npmjs.com with 2FA.
+# Use this when npm shows "Temporary Holding Version" / staged publishing.
+#
+# Setup: same NPM_TOKEN secret as publish.yml (granular token with stage/publish).
+#
+# After this workflow succeeds:
+# 1. Open https://www.npmjs.com/package/@jackmaturan%2Ftailwind-animate-css
+# 2. Approve the staged release (2FA), or run locally: npm stage approve <uuid>
+
+name: Stage package on npm
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  stage:
+    name: Stage @jackmaturan/tailwind-animate-css
+    environment: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: latest
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Prepare README for npm
+        run: |
+          sed -i 's/\[!NOTE\]/ℹ️ **NOTE**  /g' README.md
+          sed -i 's/\[!TIP\]/💡 **TIP**  /g' README.md
+          sed -i 's/\[!IMPORTANT\]/❗ **IMPORTANT**  /g' README.md
+          sed -i 's/\[!WARNING\]/⚠️ **WARNING**  /g' README.md
+          sed -i 's/\[!CAUTION\]/⛔ **CAUTION**  /g' README.md
+
+      - name: Upgrade npm CLI (for npm stage)
+        run: npm install -g npm@latest
+
+      - name: Stage package on npm
+        id: stage
+        run: |
+          set -euo pipefail
+          if ! npm stage publish --help >/dev/null 2>&1; then
+            echo "::error::This runner's npm CLI does not support 'npm stage'. Use publish.yml or upgrade npm."
+            exit 1
+          fi
+          npm stage publish --access public --json | tee stage-output.json
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Job summary
+        run: |
+          pkg=$(node -p "require('./package.json').name")
+          ver=$(node -p "require('./package.json').version")
+          {
+            echo "### Staged on npm (awaiting your approval)"
+            echo ""
+            echo "- **Package:** \`$pkg@$ver\`"
+            echo "- **Approve:** https://www.npmjs.com/package/$(node -p "encodeURIComponent(require('./package.json').name))"
+            echo ""
+            echo "Approve the staged version on npm (2FA). Until then, installs may only see \`0.0.0-stage\`."
+            echo ""
+            echo "<details><summary>Stage CLI output</summary>"
+            echo ""
+            echo '```json'
+            cat stage-output.json
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"

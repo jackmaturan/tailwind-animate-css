@@ -1,4 +1,13 @@
-name: Publish to npm with pnpm
+# Publishes @jackmaturan/tailwind-animate-css to npm when you publish a GitHub Release.
+#
+# Setup (one time):
+# 1. npm → Access Tokens → granular token with Publish (or classic publish token)
+# 2. GitHub repo → Settings → Secrets → Actions → NPM_TOKEN
+# 3. Optional: Settings → Environments → "release" with required reviewers
+#
+# Usage: create a GitHub Release for tag vX.Y.Z matching package.json version.
+
+name: Publish to npm
 
 on:
   release:
@@ -16,7 +25,7 @@ permissions:
 
 jobs:
   publish:
-    name: Publish
+    name: Publish @jackmaturan/tailwind-animate-css
     environment: release
     runs-on: ubuntu-latest
 
@@ -42,75 +51,37 @@ jobs:
       - name: Build package
         run: pnpm build
 
-      - name: Prepare main package README
+      - name: Prepare README for npm
         run: |
           sed -i 's/\[!NOTE\]/ℹ️ **NOTE**  /g' README.md
           sed -i 's/\[!TIP\]/💡 **TIP**  /g' README.md
           sed -i 's/\[!IMPORTANT\]/❗ **IMPORTANT**  /g' README.md
           sed -i 's/\[!WARNING\]/⚠️ **WARNING**  /g' README.md
           sed -i 's/\[!CAUTION\]/⛔ **CAUTION**  /g' README.md
-          cp README.md README.main.md
-          cp package.json package.main.json
 
-      - name: Publish main package to npm
+      - name: Verify package version matches release tag
+        if: github.event_name == 'release'
+        run: |
+          pkg_version=$(node -p "require('./package.json').version")
+          tag_version="${GITHUB_REF_NAME#v}"
+          if [ "$pkg_version" != "$tag_version" ]; then
+            echo "package.json version ($pkg_version) does not match release tag ($tag_version)"
+            exit 1
+          fi
+
+      - name: Publish to npm
         run: pnpm publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create and publish alias package (tw-animate-css)
+      - name: Job summary
         run: |
-          cp README.main.md README.md
-          cp package.main.json package.json
-
-          # Modify README for the alias package
-          perl -i -pe 's/(?<!\/)tailwind-animate-css/tw-animate-css/g' README.md
-
-          # Add alias note after the first --- line
-          awk '
-          BEGIN {p=1}
-          /^---$/ {
-            if(p) {
-              print $0
-              print "\n> ℹ️ **NOTE**  \n> This package is an alias of [tailwind-animate-css](https://www.npmjs.com/package/tailwind-animate-css). Both packages provide identical functionality, so you can use whichever name you prefer.\n"
-              p=0
-            } else {
-              print $0
-            }
-            next
-          }
-          {print}' README.md > README.tmp && mv README.tmp README.md
-
-          # Update package.json for alias package
-          jq '.name = "tw-animate-css"' package.json > temp.json && mv temp.json package.json
-
-          # Publish alias package
-          pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create and publish alias package (tailwindcss-animate-x)
-        run: |
-          cp README.main.md README.md
-          cp package.main.json package.json
-
-          perl -i -pe 's/(?<!\/)tailwind-animate-css/tailwindcss-animate-x/g' README.md
-
-          awk '
-          BEGIN {p=1}
-          /^---$/ {
-            if(p) {
-              print $0
-              print "\n> ℹ️ **NOTE**  \n> This package is an alias of [tailwind-animate-css](https://www.npmjs.com/package/tailwind-animate-css). Both packages provide identical functionality, so you can use whichever name you prefer.\n"
-              p=0
-            } else {
-              print $0
-            }
-            next
-          }
-          {print}' README.md > README.tmp && mv README.tmp README.md
-
-          jq '.name = "tailwindcss-animate-x"' package.json > temp.json && mv temp.json package.json
-
-          pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          pkg=$(node -p "require('./package.json').name")
+          ver=$(node -p "require('./package.json').version")
+          {
+            echo "### Published to npm"
+            echo ""
+            echo "- **Package:** \`$pkg@$ver\`"
+            echo "- **Install:** \`npm install -D $pkg\`"
+            echo "- **Page:** https://www.npmjs.com/package/$(node -p "encodeURIComponent(require('./package.json').name)")
+          } >> "$GITHUB_STEP_SUMMARY"

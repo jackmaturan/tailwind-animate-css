@@ -43,7 +43,7 @@ jobs:
         run: |
           # --- Check if package exists in npm registry ---
           package_name=$(pnpx json -f package.json -a name)
-          npm view "$package_name" 2>/dev/null || {
+          npm view "${package_name}" 2>/dev/null || {
             echo "$package_name does not exist in the npm registry. Skipping publish."
             exit 0
           }
@@ -51,7 +51,7 @@ jobs:
           current_latest=$(pnpx json -f package.json -a version)
           IFS='.' read -r major minor patch <<<"$current_latest"
           upcoming_minor="$major.$((minor + 1)).0"
-          current_canary=$(npm view "$package_name" dist-tags.canary 2>/dev/null)
+          current_canary=$(npm view "${package_name}" dist-tags.canary 2>/dev/null)
           if [ -z "$current_canary" ]; then
             release_version="$upcoming_minor-canary.0"
           else
