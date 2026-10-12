@@ -1,7 +1,7 @@
 # tailwind-animate-css
 
-[![npm version](https://img.shields.io/npm/v/tailwind-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/tailwind-animate-css)
-[![npm downloads](https://img.shields.io/npm/dt/tailwind-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/tailwind-animate-css)
+[![npm version](https://img.shields.io/npm/v/@jackmaturan%2Ftailwind-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/@jackmaturan/tailwind-animate-css)
+[![npm downloads](https://img.shields.io/npm/dt/@jackmaturan/tailwind-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/@jackmaturan/tailwind-animate-css)
 [![MIT license](https://img.shields.io/github/license/jackmaturan/tailwind-animate-css)]()
 [![GitHub stars](https://img.shields.io/github/stars/jackmaturan/tailwind-animate-css?color=blue)](https://github.com/jackmaturan/tailwind-animate-css)
 
@@ -12,7 +12,7 @@ A collection of Tailwind CSS v4.0 utilities for creating beautiful animations. I
 This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub]. It embraces the new [CSS-first architecture][TailwindCSS_Custom_Utilities], providing a pure CSS solution for adding animation capabilities to your Tailwind CSS project without relying on the legacy JavaScript plugin system or having to define all keywords from scratch.
 
 > [!NOTE]
-> v2.0.0 renames the npm package from `tw-animate-css` to `tailwind-animate-css`. Update your dependency and CSS import (`@import "tailwind-animate-css"`). The `tw-animate-css` package remains published as an identical alias.
+> **npm:** The unscoped name `tailwind-animate-css` is blocked (too similar to [`tailwind-animatecss`](https://www.npmjs.com/package/tailwind-animatecss)). Install **`@jackmaturan/tailwind-animate-css`** instead. The upstream package [`tw-animate-css`](https://www.npmjs.com/package/tw-animate-css) remains the original npm name from Wombosvideo.
 
 ## Table of Contents
 
@@ -52,13 +52,13 @@ In Cursor, open the **Ports** view, ensure port `5173` is forwarded, then open t
 1. Install the package with `npm`:
 
    ```sh
-   npm install -D tailwind-animate-css
+   npm install -D @jackmaturan/tailwind-animate-css
    ```
 
 2. Add the following line to your `app.css` or `globals.css` file:
 
    ```css
-   @import "tailwind-animate-css";
+   @import "@jackmaturan/tailwind-animate-css";
    ```
 
 3. Start using the animations!

@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "tailwind-animate-css": "workspace:*"
+    "@jackmaturan/tailwind-animate-css": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",

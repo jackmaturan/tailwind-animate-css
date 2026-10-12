@@ -42,7 +42,7 @@ importers:
 
   examples/demo:
     dependencies:
-      tailwind-animate-css:
+      '@jackmaturan/tailwind-animate-css':
         specifier: workspace:*
         version: link:../..
     devDependencies:
