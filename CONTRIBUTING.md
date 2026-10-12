@@ -1,4 +1,4 @@
-# Contributing to tw-animate-css
+# Contributing to tailwind-animate-css
 
 Thank you for your interest in contributing to this project! This document outlines the standards and processes we follow to maintain high code quality. Please read these guidelines before submitting pull requests.
 
@@ -63,7 +63,7 @@ In general:
 - Keep commits focused and logical
 - Consider using [Conventional Commits](https://www.conventionalcommits.org/) format
 
-Browse the project's [commit history](https://github.com/Wombosvideo/tw-animate-css/commits/main) for examples.
+Browse the project's [commit history](https://github.com/jackmaturan/tailwind-animate-css/commits/main) for examples.
 
 > [!TIP]
 > If you're using Visual Studio Code, you can use the [Conventional Commits extension](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits) to help you write commit messages.

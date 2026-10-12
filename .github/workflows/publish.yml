@@ -49,16 +49,21 @@ jobs:
           sed -i 's/\[!IMPORTANT\]/❗ **IMPORTANT**  /g' README.md
           sed -i 's/\[!WARNING\]/⚠️ **WARNING**  /g' README.md
           sed -i 's/\[!CAUTION\]/⛔ **CAUTION**  /g' README.md
+          cp README.md README.main.md
+          cp package.json package.main.json
 
       - name: Publish main package to npm
         run: pnpm publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create and publish alias package
+      - name: Create and publish alias package (tw-animate-css)
         run: |
+          cp README.main.md README.md
+          cp package.main.json package.json
+
           # Modify README for the alias package
-          perl -i -pe 's/(?<!\/)tw-animate-css/tailwindcss-animate-x/g' README.md
+          perl -i -pe 's/(?<!\/)tailwind-animate-css/tw-animate-css/g' README.md
 
           # Add alias note after the first --- line
           awk '
@@ -66,7 +71,7 @@ jobs:
           /^---$/ {
             if(p) {
               print $0
-              print "\n> ℹ️ **NOTE**  \n> This package is an alias of [tw-animate-css](https://www.npmjs.com/package/tw-animate-css). Both packages provide identical functionality, so you can use whichever name you prefer.\n"
+              print "\n> ℹ️ **NOTE**  \n> This package is an alias of [tailwind-animate-css](https://www.npmjs.com/package/tailwind-animate-css). Both packages provide identical functionality, so you can use whichever name you prefer.\n"
               p=0
             } else {
               print $0
@@ -76,9 +81,36 @@ jobs:
           {print}' README.md > README.tmp && mv README.tmp README.md
 
           # Update package.json for alias package
-          jq '.name = "tailwindcss-animate-x"' package.json > temp.json && mv temp.json package.json
+          jq '.name = "tw-animate-css"' package.json > temp.json && mv temp.json package.json
 
           # Publish alias package
+          pnpm publish --provenance --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create and publish alias package (tailwindcss-animate-x)
+        run: |
+          cp README.main.md README.md
+          cp package.main.json package.json
+
+          perl -i -pe 's/(?<!\/)tailwind-animate-css/tailwindcss-animate-x/g' README.md
+
+          awk '
+          BEGIN {p=1}
+          /^---$/ {
+            if(p) {
+              print $0
+              print "\n> ℹ️ **NOTE**  \n> This package is an alias of [tailwind-animate-css](https://www.npmjs.com/package/tailwind-animate-css). Both packages provide identical functionality, so you can use whichever name you prefer.\n"
+              p=0
+            } else {
+              print $0
+            }
+            next
+          }
+          {print}' README.md > README.tmp && mv README.tmp README.md
+
+          jq '.name = "tailwindcss-animate-x"' package.json > temp.json && mv temp.json package.json
+
           pnpm publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

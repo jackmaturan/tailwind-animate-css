@@ -1,9 +1,9 @@
-# tw-animate-css
+# tailwind-animate-css
 
-[![npm version](https://img.shields.io/npm/v/tw-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/tw-animate-css)
-[![npm downloads](https://img.shields.io/npm/dt/tw-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/tw-animate-css)
-[![MIT license](https://img.shields.io/github/license/Wombosvideo/tw-animate-css)]()
-[![GitHub stars](https://img.shields.io/github/stars/Wombosvideo/tw-animate-css?color=blue)](https://github.com/Wombosvideo/tw-animate-css)
+[![npm version](https://img.shields.io/npm/v/tailwind-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/tailwind-animate-css)
+[![npm downloads](https://img.shields.io/npm/dt/tailwind-animate-css?color=red&logo=npm)](https://www.npmjs.com/package/tailwind-animate-css)
+[![MIT license](https://img.shields.io/github/license/jackmaturan/tailwind-animate-css)]()
+[![GitHub stars](https://img.shields.io/github/stars/jackmaturan/tailwind-animate-css?color=blue)](https://github.com/jackmaturan/tailwind-animate-css)
 
 A collection of Tailwind CSS v4.0 utilities for creating beautiful animations. Includes ready-to-use animations `accordion-down`, `accordion-up` and `caret-blink`, as well as a set of utilities for creating your own animations.
 
@@ -11,11 +11,12 @@ A collection of Tailwind CSS v4.0 utilities for creating beautiful animations. I
 
 This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub]. It embraces the new [CSS-first architecture][TailwindCSS_Custom_Utilities], providing a pure CSS solution for adding animation capabilities to your Tailwind CSS project without relying on the legacy JavaScript plugin system or having to define all keywords from scratch.
 
-> [!WARNING]
-> The upcoming release v2.0.0 will include breaking changes. A migration script and a guide will be provided to help you transition smoothly.
+> [!NOTE]
+> v2.0.0 renames the npm package from `tw-animate-css` to `tailwind-animate-css`. Update your dependency and CSS import (`@import "tailwind-animate-css"`). The `tw-animate-css` package remains published as an identical alias.
 
 ## Table of Contents
 
+- [Demo](#demo)
 - [Getting Started](#getting-started)
   - [NPM](#npm)
   - [Manual Download](#manual-download)
@@ -28,6 +29,22 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
 - [Examples](#examples)
 - [Notes on Compatibility](#notes-on-compatibility)
 
+## Demo
+
+A local Vite playground lives in [`examples/demo`](./examples/demo). From the repo root:
+
+```sh
+pnpm install
+pnpm demo   # dev server at http://localhost:5173 (use Ports / Network URL on remote hosts)
+```
+
+Vite prints a **Local** and **Network** URL. Use the Network URL when you are on a remote machine (Cursor, Codespaces, SSH).
+
+- Dev server: port **5173** (`pnpm demo`)
+- Static preview after build: `pnpm demo:preview` → port **4173**
+
+In Cursor, open the **Ports** view, ensure port `5173` is forwarded, then open the forwarded link in your browser.
+
 ## Getting Started
 
 ### NPM
@@ -35,13 +52,13 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
 1. Install the package with `npm`:
 
    ```sh
-   npm install -D tw-animate-css
+   npm install -D tailwind-animate-css
    ```
 
 2. Add the following line to your `app.css` or `globals.css` file:
 
    ```css
-   @import "tw-animate-css";
+   @import "tailwind-animate-css";
    ```
 
 3. Start using the animations!
@@ -54,10 +71,10 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
    <div class="animate-out slide-out-to-top slide-out-to-left">...</div>
 
    <!-- Control animation duration -->
-   <div class="... duration-300">...</div>
+   <div class="duration-300 ...">...</div>
 
    <!-- Control animation delay -->
-   <div class="... delay-150">...</div>
+   <div class="delay-150 ...">...</div>
 
    <!-- And so much more! -->
    ```
@@ -67,12 +84,12 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
 
 ### Manual Download
 
-1. Download the [`tw-animate.css`][CSS_File]
+1. Download the [`tailwind-animate.css`][CSS_File]
    file from GitHub and place it next to your `app.css` or `globals.css` file.
 2. Add the following line to your `app.css` or `globals.css` file:
 
    ```css
-   @import "./tw-animate.css";
+   @import "./tailwind-animate.css";
    ```
 
 3. Start using the animations!
@@ -85,10 +102,10 @@ This package is a replacement for [`tailwindcss-animate`][Original_Plugin_GitHub
    <div class="animate-out slide-out-to-top slide-out-to-left">...</div>
 
    <!-- Control animation duration -->
-   <div class="... duration-300">...</div>
+   <div class="duration-300 ...">...</div>
 
    <!-- Control animation delay -->
-   <div class="... delay-150">...</div>
+   <div class="delay-150 ...">...</div>
 
    <!-- And so much more! -->
    ```
@@ -226,5 +243,5 @@ By the way, if you don't use some of the above animations, they will not be incl
 [MDN_Direction]: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-direction
 [MDN_Fill_Mode]: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-fill-mode
 [MDN_Play_State]: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-play-state
-[Create_Issue]: https://github.com/Wombosvideo/tw-animate-css/issues/new
-[CSS_File]: https://raw.githubusercontent.com/Wombosvideo/tw-animate-css/refs/heads/main/src/tw-animate.css
+[Create_Issue]: https://github.com/jackmaturan/tailwind-animate-css/issues/new
+[CSS_File]: https://raw.githubusercontent.com/jackmaturan/tailwind-animate-css/refs/heads/main/src/tailwind-animate.css

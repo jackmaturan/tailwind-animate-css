@@ -142,7 +142,7 @@ animation-duration: <value>;
 </table>
 
 > [!NOTE]
-> The `duration-*` utility is not defined in `tw-animate-css` and is included only for completeness. It uses the `--tw-duration` variable to apply the duration. Check out the [Tailwind CSS documentation][TailwindCSS_Duration] to see the actual implementation.
+> The `duration-*` utility is not defined in `tailwind-animate-css` and is included only for completeness. It uses the `--tw-duration` variable to apply the duration. Check out the [Tailwind CSS documentation][TailwindCSS_Duration] to see the actual implementation.
 
 <!-- Links -->
 

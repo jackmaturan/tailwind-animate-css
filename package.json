@@ -1,6 +1,6 @@
 {
-  "name": "tw-animate-css",
-  "version": "1.4.0",
+  "name": "tailwind-animate-css",
+  "version": "2.0.0",
   "description": "TailwindCSS v4.0 compatible replacement for `tailwindcss-animate`.",
   "keywords": [
     "accordion",
@@ -18,17 +18,19 @@
     "slide",
     "spin",
     "tailwind-animate",
+    "tailwind-animate-css",
     "tailwind",
     "tailwindcss-animate",
     "tailwindcss",
     "transform",
     "transition",
     "translate",
+    "tw-animate-css",
     "zoom"
   ],
-  "homepage": "https://github.com/Wombosvideo/tw-animate-css#readme",
-  "bugs": "https://github.com/Wombosvideo/tw-animate-css/issues",
-  "repository": "Wombosvideo/tw-animate-css",
+  "homepage": "https://github.com/jackmaturan/tailwind-animate-css#readme",
+  "bugs": "https://github.com/jackmaturan/tailwind-animate-css/issues",
+  "repository": "github:jackmaturan/tailwind-animate-css",
   "funding": "https://github.com/sponsors/Wombosvideo",
   "license": "MIT",
   "author": {
@@ -38,19 +40,29 @@
   "type": "module",
   "exports": {
     ".": {
-      "style": "./dist/tw-animate.css"
+      "style": "./src/tailwind-animate.css"
     },
     "./prefix": {
-      "style": "./dist/tw-animate-prefix.css"
+      "style": "./dist/tailwind-animate-prefix.css"
+    },
+    "./register": {
+      "require": "./scripts/register.cjs",
+      "import": "./scripts/register.cjs",
+      "default": "./scripts/register.cjs"
     }
   },
-  "main": "./dist/tw-animate.css",
+  "main": "./src/tailwind-animate.css",
   "files": [
-    "dist"
+    "dist",
+    "scripts",
+    "src"
   ],
   "scripts": {
-    "build": "pnpx @tailwindcss/cli -i ./src/tw-animate.css -o ./dist/tw-animate.css -m && node ./transform.ts ./dist/tw-animate.css ./dist/tw-animate-prefix.css",
+    "build": "pnpx @tailwindcss/cli -i ./src/tailwind-animate.css -o ./dist/tailwind-animate.css -m && node ./transform.ts ./dist/tailwind-animate.css ./dist/tailwind-animate-prefix.css",
+    "demo": "pnpm --filter tailwind-animate-css-demo dev",
+    "demo:preview": "pnpm --filter tailwind-animate-css-demo build && pnpm --filter tailwind-animate-css-demo preview",
     "format": "prettier --write --ignore-unknown .",
+    "log:os": "node ./scripts/log-os-info.cjs",
     "prepare": "simple-git-hooks"
   },
   "simple-git-hooks": {
@@ -66,6 +78,10 @@
     "*": "prettier --write --ignore-unknown",
     "package.json": "sort-package-json"
   },
+  "dependencies": {
+    "winston": "^3.19.0",
+    "winston-loggly-bulk": "^3.3.3"
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
@@ -79,6 +95,7 @@
   "packageManager": "pnpm@10.17.1",
   "pnpm": {
     "onlyBuiltDependencies": [
+      "esbuild",
       "simple-git-hooks"
     ]
   }

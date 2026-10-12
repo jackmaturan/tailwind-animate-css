@@ -112,7 +112,7 @@ animation-timing-function: <value>;
 </table>
 
 > [!NOTE]
-> This utility is not defined in `tw-animate-css` and is included only for completeness. It uses the `--tw-ease` variable to apply the timing function. Check out the [Tailwind CSS documentation][TailwindCSS_Easing] to see the actual implementation.
+> This utility is not defined in `tailwind-animate-css` and is included only for completeness. It uses the `--tw-ease` variable to apply the timing function. Check out the [Tailwind CSS documentation][TailwindCSS_Easing] to see the actual implementation.
 
 <!-- Links -->
 
